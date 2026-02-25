@@ -41,7 +41,7 @@ O frontend estará disponível em: [http://localhost:3000](http://localhost:3000
 
 Utilize estas credenciais para acessar o Dashboard após iniciar ambos os servidores:
 
-- **Login:** `admin@livrocaixa.local`
+- **Login:** `admin@livrocaixa.com.br`
 - **Senha:** `admin123`
 
 > [!TIP]

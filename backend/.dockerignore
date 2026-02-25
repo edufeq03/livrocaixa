@@ -1,0 +1,7 @@
+venv
+__pycache__
+*.pyc
+.env
+livrocaixa.db
+.git
+.gitignore
