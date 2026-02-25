@@ -1,15 +1,66 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Users, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import api from '@/lib/api';
 
 export default function DashboardPage() {
+    const [statsData, setStatsData] = useState({
+        total_income: 0,
+        total_expense: 0,
+        balance: 0,
+        total_companies: 0
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const res = await api.get('/stats/summary');
+                setStatsData(res.data);
+            } catch (err) {
+                console.error('Error fetching stats:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
     const stats = [
-        { label: 'Saldo Atual', value: 'R$ 12.450,00', icon: DollarSign, trend: '+12%', up: true },
-        { label: 'Entradas (mês)', value: 'R$ 25.000,00', icon: TrendingUp, trend: '+8%', up: true },
-        { label: 'Saídas (mês)', value: 'R$ 12.550,00', icon: TrendingDown, trend: '-2%', up: false },
-        { label: 'Clientes Ativos', value: '142', icon: Users, trend: '+4', up: true },
+        {
+            label: 'Saldo Atual',
+            value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(statsData.balance),
+            icon: DollarSign,
+            trend: '+0%',
+            up: statsData.balance >= 0
+        },
+        {
+            label: 'Entradas (Total)',
+            value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(statsData.total_income),
+            icon: TrendingUp,
+            trend: '+0%',
+            up: true
+        },
+        {
+            label: 'Saídas (Total)',
+            value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(statsData.total_expense),
+            icon: TrendingDown,
+            trend: '-0%',
+            up: false
+        },
+        {
+            label: 'Empresas Ativas',
+            value: statsData.total_companies.toString(),
+            icon: Users,
+            trend: '+0',
+            up: true
+        },
     ];
+
+    if (loading) {
+        return <div className="p-12 text-center text-muted-foreground">Carregando painel...</div>;
+    }
 
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
@@ -19,9 +70,9 @@ export default function DashboardPage() {
                     <p className="text-muted-foreground mt-1 text-lg">Visão consolidada do fluxo financeiro.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold hover:scale-[1.02] transition-all shadow-xl shadow-primary/20">
+                    <a href="/app/transactions" className="bg-primary text-primary-foreground px-6 py-3 rounded-xl font-bold hover:scale-[1.02] transition-all shadow-xl shadow-primary/20">
                         Novo Lançamento
-                    </button>
+                    </a>
                 </div>
             </div>
 

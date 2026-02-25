@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { LayoutDashboard, Users, Building2, CreditCard, LogOut, ChevronRight, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, Building2, CreditCard, LogOut, ChevronRight, Menu, Tag, Wallet } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -12,6 +12,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         { label: 'Dashboard', icon: LayoutDashboard, href: '/app/dashboard' },
         { label: 'Transações', icon: CreditCard, href: '/app/transactions' },
         { label: 'Empresas', icon: Building2, href: '/app/companies' },
+        { label: 'Categorias', icon: Tag, href: '/app/categories' },
+        { label: 'Contas', icon: Wallet, href: '/app/accounts' },
         { label: 'Usuários', icon: Users, href: '/app/users' },
     ];
 

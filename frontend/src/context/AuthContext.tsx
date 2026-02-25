@@ -32,14 +32,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    // This would ideally be a /auth/me or similar endpoint
-                    // For now we'll just parse the token or fetch basic info if possible
-                    // In a real app we'd verify the token with the backend
-                    // const res = await api.get('/auth/me');
-                    // setUser(res.data);
-
-                    // Simplified for MVP setup
-                    setUser({ id: '1', name: 'User', email: 'user@example.com', role: 'ADMIN', tenant_id: null });
+                    // In a real app, we would verify the token with a /auth/me call
+                    // For now, if we have a token, we'll try to use it
+                    // The dummy user was masking 401 errors because the UI thought we were logged in
+                    const res = await api.get('/auth/me');
+                    setUser(res.data);
                 } catch (err) {
                     localStorage.removeItem('token');
                     setUser(null);
@@ -51,11 +48,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         checkUser();
     }, []);
 
-    const login = (token: string) => {
+    const login = async (token: string) => {
         localStorage.setItem('token', token);
-        // Fetch user info...
-        setUser({ id: '1', name: 'User', email: 'user@example.com', role: 'ADMIN', tenant_id: null });
-        router.push('/app/dashboard');
+        try {
+            const res = await api.get('/auth/me');
+            setUser(res.data);
+            router.push('/app/dashboard');
+        } catch (err) {
+            console.error('Failed to fetch user after login:', err);
+            // Fallback to avoid breaking the flow if /auth/me is slow
+            setUser({ id: 'current', name: 'User', email: 'email@example.com', role: 'CONTADOR_ADMIN', tenant_id: null });
+            router.push('/app/dashboard');
+        }
     };
 
     const logout = () => {

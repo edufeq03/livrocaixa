@@ -25,7 +25,8 @@ async def create_transaction(
 
     db_transaction = models.Transaction(
         **transaction.dict(),
-        tenant_id=current_user.tenant_id
+        tenant_id=current_user.tenant_id,
+        created_by=current_user.id
     )
     db.add(db_transaction)
     db.commit()
@@ -34,7 +35,7 @@ async def create_transaction(
 
 @router.get("/", response_model=List[schemas.Transaction])
 async def list_transactions(
-    company_id: Optional[UUID] = None,
+    company_id: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
@@ -46,6 +47,15 @@ async def list_transactions(
     
     # Optional company filter
     if company_id:
-        query = query.filter(models.Transaction.company_id == str(company_id))
+        query = query.filter(models.Transaction.company_id == company_id)
         
-    return query.order_by(models.Transaction.date.desc()).all()
+    transactions = query.order_by(models.Transaction.date_lancamento.desc()).all()
+    
+    # Manually populate names for the response model (unless we use nested objects)
+    # Since we added these to schemas.Transaction, we can set them here
+    for t in transactions:
+        t.category_name = t.category.name if t.category else "N/A"
+        t.account_name = t.account.name if t.account else "N/A"
+        t.company_name = t.company.company_name if t.company else "N/A"
+        
+    return transactions

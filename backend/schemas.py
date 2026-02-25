@@ -48,14 +48,44 @@ class User(UserBase):
 class CompanyBase(BaseModel):
     company_name: str
     cnpj: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
 
 class CompanyCreate(CompanyBase):
-    tenant_id: str
+    tenant_id: Optional[str] = None
 
 class Company(CompanyBase):
     id: str
     tenant_id: str
     created_at: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
+# --- Category Schemas ---
+class CategoryBase(BaseModel):
+    name: str
+    type: TransactionType
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class Category(CategoryBase):
+    id: str
+    tenant_id: str
+    
+    model_config = ConfigDict(from_attributes=True)
+
+# --- Account Schemas ---
+class AccountBase(BaseModel):
+    name: str
+
+class AccountCreate(AccountBase):
+    pass
+
+class Account(AccountBase):
+    id: str
+    tenant_id: str
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -78,6 +108,9 @@ class Transaction(TransactionBase):
     receipt_url: Optional[str] = None
     created_by: str
     created_at: datetime
+    category_name: Optional[str] = None
+    account_name: Optional[str] = None
+    company_name: Optional[str] = None
     
     model_config = ConfigDict(from_attributes=True)
 

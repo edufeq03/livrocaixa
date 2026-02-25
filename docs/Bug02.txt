@@ -1,0 +1,12 @@
+1- dashboard, verificar se os numeros que aparecem são numeros dinamicos ou "hard coded"
+2- Transacoes
+A) formulario abre, porém, os campos categoria e conta precisam ser mais fáceis de preencher... talvez precisamos criar um CRUD para categoria e outro para Conta e depois trazer em forma de um select para ser selecionado no momento de cadastro do lançamento.
+B) na tela onde aparecem as transacoes, nao está aparecendo a data (mostra "invalid date"), a coluna de categoria está vazia e nao entendi qual é a ordenação dos registros que ela recupera (é por valor? data? talvez fosse intereesante um botão para "ordenar por", o usuario escolheria por data de lancamento, por valor, por empresa, por conta, etc...)
+C) o filtro parece não estar habilitado ainda
+3- Empresas
+A) Filtro também nao funciona
+B) Não está funcionando os botões de editar e excluir empresas
+C) o botão de adicionar está funcionando perfeito!
+4- Usuarios
+A) Filtro também nao funciona
+B) Botão de exclusao funciona perfeito

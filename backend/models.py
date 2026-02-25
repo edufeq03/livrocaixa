@@ -75,6 +75,9 @@ class Company(Base):
     tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
     company_name = Column(String(150), nullable=False)
     cnpj = Column(String(18), nullable=True)
+    address = Column(Text, nullable=True)
+    city = Column(String(100), nullable=True)
+    state = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -116,6 +119,8 @@ class Transaction(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     company = relationship("Company", back_populates="transactions")
+    category = relationship("Category")
+    account = relationship("Account")
 
 # Indexes
 Index('ix_transactions_tenant_company_date', Transaction.tenant_id, Transaction.company_id, Transaction.date_lancamento)

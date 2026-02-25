@@ -43,21 +43,27 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        print(f"DEBUG: Decoding token: {str(token)[:10]}...")
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user_id: str = payload.get("user_id")
+        print(f"DEBUG: user_id from token: {user_id}")
         if user_id is None:
+            print("DEBUG: No user_id in payload")
             raise credentials_exception
         token_data = schemas.TokenData(
             user_id=user_id,
             tenant_id=payload.get("tenant_id"),
             role=payload.get("role")
         )
-    except JWTError:
+    except JWTError as e:
+        print(f"DEBUG: JWT Decode Error: {str(e)}")
         raise credentials_exception
         
     user = db.query(models.User).filter(models.User.id == token_data.user_id).first()
     if user is None:
+        print(f"DEBUG: User not found in DB: {token_data.user_id}")
         raise credentials_exception
+    print(f"DEBUG: User authenticated: {user.email}")
     return user
 
 def check_role(roles: list):

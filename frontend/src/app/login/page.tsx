@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FileText, Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
     const router = useRouter();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -30,10 +32,7 @@ export default function LoginPage() {
             });
 
             const { access_token } = response.data;
-            localStorage.setItem('token', access_token);
-
-            // Navigate to dashboard (placeholder)
-            router.push('/app/dashboard');
+            login(access_token);
         } catch (err: any) {
             console.error(err);
             setError(err.response?.data?.detail || 'Erro ao realizar login. Tente novamente.');

@@ -37,3 +37,7 @@ async def refresh_token(current_user: models.User = Depends(auth.get_current_use
         data={"user_id": current_user.id, "tenant_id": current_user.tenant_id, "role": current_user.role}
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/me", response_model=schemas.User)
+async def get_me(current_user: models.User = Depends(auth.get_current_user)):
+    return current_user

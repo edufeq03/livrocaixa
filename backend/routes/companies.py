@@ -15,13 +15,16 @@ async def create_company(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     # Check if user is Admin or super admin
-    if current_user.role not in [models.UserRole.ADMIN, models.UserRole.SUPER_ADMIN]:
+    if current_user.role not in [models.UserRole.CONTADOR_ADMIN, models.UserRole.SUPER_ADMIN]:
         raise HTTPException(status_code=403, detail="Not authorized to create companies")
     
     # In a multi-tenant SaaS, usually companies belong to a tenant
     # For MVP, we'll associate it with the current user's tenant
+    company_data = company.dict()
+    company_data.pop("tenant_id", None)
+    
     db_company = models.Company(
-        **company.dict(),
+        **company_data,
         tenant_id=current_user.tenant_id
     )
     db.add(db_company)
