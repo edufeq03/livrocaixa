@@ -66,4 +66,28 @@ pm2 start "npm start -- -p 3000" --name "livro-frontend"
 ```
 
 > [!TIP]
-> **Rede Interna**: No Easypanel, use o nome do serviço do banco (ex: `@db`) na URL de conexão. O Easypanel resolve isso automaticamente para o IP interno.
+> **Rede Interna**: No Easypanel, use o nome do serviço do banco (ex: `db`) na URL de conexão. O Easypanel resolve isso automaticamente para o IP interno.
+
+## 🌐 Rede e Portas no Easypanel
+
+Uma dúvida comum é sobre o conflito de portas (como a `5432` do Postgres) quando se tem vários projetos.
+
+### 1. Isolamento por Contêiner
+Cada serviço no Easypanel roda em seu próprio contêiner com um IP interno próprio. Isso significa que **não há conflito** se você tiver 10 instâncias de Postgres em portas `5432` dentro dos contêineres, pois elas não "ecoam" na porta da VPS principal a menos que você configure isso explicitamente.
+
+### 2. Comunicação Interna (Recomendado)
+Para o Backend (FastAPI) conversar com o Banco (Postgres), você **não precisa** abrir a porta `5432` para a internet.
+- No campo **Hostname** da conexão, use o **Service Name** do banco no Easypanel (ex: `livrocaixa-db`).
+- A URL de conexão será: `postgresql+psycopg2://usuario:senha@livrocaixa-db:5432/nome_do_banco`.
+
+### 3. Acesso Externo (Opcional)
+Se você precisar acessar o banco de dados do seu computador (usando DBeaver ou TablePlus, por exemplo):
+- Vá nas configurações do serviço de banco no Easypanel.
+- Procure a seção de **External Ports**.
+- Mapeie uma porta livre na sua VPS (ex: `5433`) para a porta `5432` do contêiner.
+- **Segurança**: Lembre-se de fechar essa porta ou usar um Firewall se não for mais necessária.
+
+### 4. Como verificar a conexão?
+Eu adicionei diagnósticos nos logs. Se o Backend iniciar e você vir a mensagem:
+`--- ENVIRONMENT DIAGNOSTICS ---`
+Seguida de informações da versão, significa que o Python carregou. Se houver erro de conexão, ele aparecerá logo abaixo nos logs do servidor.
