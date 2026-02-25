@@ -21,14 +21,14 @@ O Easypanel facilita a conexão entre contêineres usando a rede interna do proj
   - `SECRET_KEY`: Uma string aleatória longa para o JWT.
 - **Domínio**: Configure um subdomínio como `api.seudominio.com`.
 
-### 3. Serviço de Front-end (Next.js)
-- Crie outro serviço do tipo **App**.
-- **Source**: Conecte ao seu repositório Git.
-- **Root Directory**: Defina como `frontend`.
-- **Dockerfile**: O Easypanel detectará automaticamente o `frontend/Dockerfile`.
-- **Build Arguments**:
-  - `NEXT_PUBLIC_API_URL`: Use a URL pública do seu back-end (ex: `https://api.seudominio.com`).
 - **Domínio**: Configure seu domínio principal (ex: `seudominio.com`).
+
+### 4. Inicializar o Banco (Seed)
+Após o deploy do backend ter finalizado com sucesso:
+- No Easypanel, entre no serviço de **Backend**.
+- Clique na aba **Console** ou **Terminal**.
+- Digite o comando: `python seed.py`.
+- Isso criará as tabelas e o usuário administrador padrão (`admin@livrocaixa.com.br` / `admin123`).
 
 ---
 
