@@ -58,8 +58,38 @@ Este documento consolida os aprendizados obtidos durante a resolução de bugs c
 
 ---
 
-## 🚀 4. Workflow de Desenvolvimento
+## 🏗️ 4. Deploy e Produção (VPS/Easypanel)
 
-1. **Logs são seus amigos**: Mantenha o terminal do backend visível. 90% dos erros de "CORS" no frontend são, na verdade, crashes (500) no backend.
-2. **Teste em Estado Limpo**: Frequentemente limpe o banco de dados (`del livrocaixa.db`) e re-execute o `seed.py` para garantir que novas migrações e restrições funcionam do zero.
-3. **Pequenas Iterações**: Teste a funcionalidade no navegador imediatamente após cada pequena mudança no backend.
+### Ambiente Node.js (Frontend)
+- **O Problema**: Falhas no build do Tailwind CSS v4 e Next.js 15.
+- **Por que ocorreu**: O Tailwind CSS v4 e o motor `oxide` exigem **Node.js >= 20**. O uso do Node 18 causa erros de "native bindings" impossíveis de debugar via código.
+- **Como evitar**:
+    - Mantenha o `Dockerfile` e o `package.json` sincronizados com a versão estável mais recente (LTS) do Node (atualmente recomenda-se **Node 20 Alpine** para produção).
+
+### Drivers de Banco de Dados (Psycopg 3)
+- **O Problema**: `ModuleNotFoundError` persistente para `psycopg2`.
+- **Por que ocorreu**: Incompatibilidades entre as versões binárias (`psycopg2-binary`) e sistemas Linux "slim". Além disso, o SQLAlchemy 2.0 recomenda o uso do **Psycopg 3**.
+- **Como evitar**:
+    - Use `psycopg[binary]` (v3) no `requirements.txt`.
+    - No `database.py`, normalize as URLs do Postgres de `postgres://` para `postgresql+psycopg://`. O prefixo `postgres://` é obsoleto e causa erro no SQLAlchemy 2.0.
+
+### Rede Interna vs Externa
+- **O Problema**: Confusão sobre portas e conectividade entre Backend e Banco.
+- **Por que ocorreu**: Tentativa de usar `localhost` ou IPs externos quando os serviços rodam em contêineres isolados.
+- **Como evitar**:
+    - Utilize o **Service Name** do banco como hostname (ex: `db` em vez de `127.0.0.1`).
+    - Nunca exponha a porta `5432` da VPS para a internet a menos que precise de acesso externo direto (via DBeaver, etc.). Mantenha a comunicação privada via rede interna do Docker/Easypanel.
+
+### Configuração de CORS em Produção
+- **O Problema**: Login funcionando localmente mas falhando na VPS com erro de "Network Error" ou Bloqueio de CORS.
+- **Por que ocorreu**: O middleware CORS no backend estava restrito ao `localhost`.
+- **Como evitar**:
+    - Em produção, configure `allow_origins=["*"]` se o front e o back estiverem em domínios ou subdomínios diferentes, ou especifique a lista exata de domínios permitidos.
+
+---
+
+## 🚀 5. Workflow de Desenvolvimento e Deploy
+
+1. **Logs são seus amigos**: Mantenha o terminal do backend visível. Se o front der "Network Error", o log do backend dirá se foi um 500 ou um erro de CORS.
+2. **Push é Mandatório**: Mudanças feitas no seu ambiente local (commits) **devem** ser enviadas ao Git (`git push`) para que o serviço de deploy automático as detecte.
+3. **Seed após Deploy**: Sempre que limpar o banco de dados em produção ou trocar de provedor, execute o `seed.py` via console do contêiner para garantir que o usuário Admin exista.
