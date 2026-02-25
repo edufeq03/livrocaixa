@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Tag, Plus, Search, Pencil, Trash2, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { Tag, Plus, Edit, Trash2, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 import api from '@/lib/api';
 
 interface Category {
@@ -123,7 +123,7 @@ export default function CategoriesPage() {
                                 <td className="p-6 text-right">
                                     <div className="flex justify-end gap-2">
                                         <button onClick={() => handleEdit(cat)} className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-primary">
-                                            <Pencil className="w-4 h-4" />
+                                            <Edit className="w-4 h-4" />
                                         </button>
                                         <button onClick={() => handleDelete(cat.id)} className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-red-500">
                                             <Trash2 className="w-4 h-4" />
@@ -159,8 +159,8 @@ export default function CategoriesPage() {
                                         type="button"
                                         onClick={() => setFormData({ ...formData, type: 'INCOME' })}
                                         className={`p-4 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all ${formData.type === 'INCOME'
-                                                ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
-                                                : 'bg-secondary/50 border-border'
+                                            ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
+                                            : 'bg-secondary/50 border-border'
                                             }`}
                                     >
                                         <ArrowUpCircle className="w-5 h-5" /> Receita
@@ -169,8 +169,8 @@ export default function CategoriesPage() {
                                         type="button"
                                         onClick={() => setFormData({ ...formData, type: 'EXPENSE' })}
                                         className={`p-4 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all ${formData.type === 'EXPENSE'
-                                                ? 'bg-red-500 text-white border-red-500 shadow-lg shadow-red-500/20'
-                                                : 'bg-secondary/50 border-border'
+                                            ? 'bg-red-500 text-white border-red-500 shadow-lg shadow-red-500/20'
+                                            : 'bg-secondary/50 border-border'
                                             }`}
                                     >
                                         <ArrowDownCircle className="w-5 h-5" /> Despesa

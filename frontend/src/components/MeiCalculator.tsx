@@ -32,6 +32,7 @@ const MeiCalculator = () => {
 
   useEffect(() => {
     calculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [revenue, segment]);
 
   return (
@@ -69,11 +70,10 @@ const MeiCalculator = () => {
               <button
                 key={s}
                 onClick={() => setSegment(s)}
-                className={`py-2 px-4 rounded-xl text-sm font-medium transition-all ${
-                  segment === s
+                className={`py-2 px-4 rounded-xl text-sm font-medium transition-all ${segment === s
                     ? 'bg-primary text-primary-foreground shadow-lg'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                }`}
+                  }`}
               >
                 {s.charAt(0).toUpperCase() + s.slice(1)}
               </button>
@@ -96,7 +96,7 @@ const MeiCalculator = () => {
           <div className="p-4 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 rounded-xl border border-amber-200 dark:border-amber-800 flex gap-3 text-sm">
             <Info className="w-5 h-5 flex-shrink-0" />
             <p>
-              <strong>Atenção:</strong> Seu faturamento ultrapassa o limite do MEI (R$ 81.000). 
+              <strong>Atenção:</strong> Seu faturamento ultrapassa o limite do MEI (R$ 81.000).
               A migração para o Simples Nacional é obrigatória para evitar multas.
             </p>
           </div>
@@ -117,7 +117,7 @@ const MeiCalculator = () => {
           </div>
         </div>
       </div>
-      
+
       <p className="text-[10px] text-muted-foreground mt-6 text-center italic">
         * Os valores exibidos são estimativas baseadas na legislação de 2024. Consulte sempre um contador credenciado.
       </p>

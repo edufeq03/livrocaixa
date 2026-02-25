@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Wallet, Plus, Search, Pencil, Trash2 } from 'lucide-react';
+import { Landmark, Plus, Trash2, Edit } from 'lucide-react';
 import api from '@/lib/api';
 
 interface Account {
@@ -105,7 +105,7 @@ export default function AccountsPage() {
                                 <td className="p-6">
                                     <div className="flex items-center gap-3">
                                         <div className="p-2 bg-secondary rounded-lg">
-                                            <Wallet className="w-4 h-4 text-primary" />
+                                            <Landmark className="w-4 h-4 text-primary" />
                                         </div>
                                         <span className="font-bold">{acc.name}</span>
                                     </div>
@@ -113,7 +113,7 @@ export default function AccountsPage() {
                                 <td className="p-6 text-right">
                                     <div className="flex justify-end gap-2">
                                         <button onClick={() => handleEdit(acc)} className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-primary">
-                                            <Pencil className="w-4 h-4" />
+                                            <Edit className="w-4 h-4" />
                                         </button>
                                         <button onClick={() => handleDelete(acc.id)} className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-red-500">
                                             <Trash2 className="w-4 h-4" />

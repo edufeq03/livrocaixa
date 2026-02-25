@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Building2, Plus, Search, MoreVertical, Filter, Trash2, Edit2 } from 'lucide-react';
+import { Building2, Plus, Search, Trash2, Edit } from 'lucide-react';
 import api from '@/lib/api';
 
 interface Company {
@@ -156,7 +156,7 @@ export default function CompaniesPage() {
                                             className="p-2 hover:bg-secondary rounded-lg transition-colors"
                                             title="Editar"
                                         >
-                                            <Edit2 className="w-4 h-4 text-muted-foreground" />
+                                            <Edit className="w-4 h-4 text-muted-foreground" />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(company.id)}

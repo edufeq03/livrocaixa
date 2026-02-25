@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Search, MoreVertical, Filter, Trash2, Mail, Shield } from 'lucide-react';
+import { Users, Plus, Search, Mail, Shield, Trash2 } from 'lucide-react';
 import api from '@/lib/api';
 
 interface User {

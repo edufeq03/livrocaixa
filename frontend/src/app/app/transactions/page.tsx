@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { CreditCard, Plus, Search, Filter, ArrowUpCircle, ArrowDownCircle, Calendar, Tag } from 'lucide-react';
+import { CreditCard, Plus, Search, ArrowUpCircle, ArrowDownCircle, Calendar } from 'lucide-react';
 import api from '@/lib/api';
 
 interface Transaction {
@@ -85,6 +85,7 @@ export default function TransactionsPage() {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleAddTransaction = async (e: React.FormEvent) => {
@@ -114,16 +115,24 @@ export default function TransactionsPage() {
             t.category_name?.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .sort((a, b) => {
-            let valA: any = a[sortBy === 'date' ? 'date_lancamento' : sortBy];
-            let valB: any = b[sortBy === 'date' ? 'date_lancamento' : sortBy];
+            const key = sortBy === 'date' ? 'date_lancamento' : sortBy;
+            const valA = a[key as keyof Transaction];
+            const valB = b[key as keyof Transaction];
 
             if (sortBy === 'date') {
-                valA = new Date(valA).getTime();
-                valB = new Date(valB).getTime();
+                const timeA = new Date(valA as string).getTime();
+                const timeB = new Date(valB as string).getTime();
+                return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
             }
 
-            if (sortOrder === 'asc') return valA > valB ? 1 : -1;
-            return valA < valB ? 1 : -1;
+            if (typeof valA === 'number' && typeof valB === 'number') {
+                return sortOrder === 'asc' ? valA - valB : valB - valA;
+            }
+
+            const strA = String(valA).toLowerCase();
+            const strB = String(valB).toLowerCase();
+            if (sortOrder === 'asc') return strA > strB ? 1 : -1;
+            return strA < strB ? 1 : -1;
         });
 
     const toggleSort = (field: 'date' | 'amount' | 'description') => {
@@ -134,6 +143,7 @@ export default function TransactionsPage() {
             setSortOrder('desc');
         }
     };
+
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
