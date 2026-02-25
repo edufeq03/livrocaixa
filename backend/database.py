@@ -12,16 +12,18 @@ if not SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     print(f"Python Version: {sys.version}")
     print(f"Working Directory: {os.getcwd()}")
     try:
-        import psycopg2
-        print(f"psycopg2 version: {psycopg2.__version__}")
-        print(f"psycopg2 file: {psycopg2.__file__}")
+        import psycopg
+        print(f"psycopg version: {psycopg.__version__}")
+        print(f"psycopg file: {psycopg.__file__}")
     except ImportError as e:
-        print(f"CRITICAL: Failed to import psycopg2: {e}")
+        print(f"CRITICAL: Failed to import psycopg: {e}")
     print("-------------------------------")
 
-# Standardize PostgreSQL connection string
+# Standardize PostgreSQL connection string to use psycopg v3
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql://"):
-    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+elif SQLALCHEMY_DATABASE_URL.startswith("postgresql+psycopg2://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgresql+psycopg2://", "postgresql+psycopg://", 1)
 
 # For SQLite, we need to allow multi-threaded access
 engine = create_engine(
